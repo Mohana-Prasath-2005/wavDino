@@ -1,0 +1,54 @@
+# Temporal Configuration: 16-Frame with Temporal Attention
+# This is for AFEW dataset (more dynamic emotions)
+
+experiment_name: temporal_16frames_attention
+
+# Model Configuration
+model:
+  model_type: temporal
+  
+  # Audio encoder
+  audio_model: facebook/wav2vec2-base-960h
+  freeze_wav2vec: true
+  
+  # Visual encoder (16 FRAMES for capturing longer dynamics)
+  visual_model: dinov2_vitl14
+  freeze_dinov2: true
+  num_frames: 16  # 16 frames for more temporal context
+  temporal_method: attention  # Attention pooling
+  
+  # Fusion
+  fusion_dim: 512
+  fusion_method: transformer
+  num_fusion_heads: 8
+  num_fusion_layers: 2
+  
+  # Training
+  dropout: 0.1
+  num_classes: 7  # Will be overridden by dataset
+
+# Training Configuration
+training:
+  num_epochs: 50
+  batch_size: 4  # Smaller batch size due to more frames
+  
+  optimizer:
+    type: adamw
+    lr: 0.0001
+    weight_decay: 0.01
+  
+  lr_scheduler:
+    type: plateau
+    factor: 0.5
+    patience: 5
+  
+  early_stopping:
+    patience: 10
+    min_delta: 0.001
+
+# Data Configuration
+data:
+  img_size: 224
+  sampling_method: uniform
+  augmentation: true
+  num_workers: 4

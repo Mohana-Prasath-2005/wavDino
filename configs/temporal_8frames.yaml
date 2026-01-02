@@ -1,0 +1,54 @@
+# Temporal Configuration: 8-Frame with Temporal Attention
+# This is the RECOMMENDED enhancement (Option A1)
+
+experiment_name: temporal_8frames_attention
+
+# Model Configuration
+model:
+  model_type: temporal  # 'baseline' or 'temporal'
+  
+  # Audio encoder (SAME as baseline)
+  audio_model: facebook/wav2vec2-base-960h
+  freeze_wav2vec: true
+  
+  # Visual encoder (MULTI-FRAME with TEMPORAL ATTENTION)
+  visual_model: dinov2_vitl14
+  freeze_dinov2: true
+  num_frames: 8  # 8 frames for temporal modeling
+  temporal_method: attention  # 'attention' or 'transformer'
+  
+  # Fusion (SAME as baseline)
+  fusion_dim: 512
+  fusion_method: transformer
+  num_fusion_heads: 8
+  num_fusion_layers: 2
+  
+  # Training
+  dropout: 0.1
+  num_classes: 6  # Will be overridden by dataset
+
+# Training Configuration
+training:
+  num_epochs: 50
+  batch_size: 6  # Slightly smaller due to multiple frames
+  
+  optimizer:
+    type: adamw
+    lr: 0.0001
+    weight_decay: 0.01
+  
+  lr_scheduler:
+    type: plateau
+    factor: 0.5
+    patience: 5
+  
+  early_stopping:
+    patience: 10
+    min_delta: 0.001
+
+# Data Configuration
+data:
+  img_size: 224
+  sampling_method: uniform  # Uniform sampling across clip
+  augmentation: true
+  num_workers: 4
