@@ -1,3 +1,9 @@
+# Guide Name
+
+Mrs. E. Padma AP/CSE
+
+
+
 # Temporal wavDINO-Emotion
 
 **Enhanced Multimodal Emotion Recognition with Temporal Visual Modeling**
